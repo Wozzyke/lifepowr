@@ -610,10 +610,9 @@ class LifepowrMetadataSensor(
         if key == "storage_details":
             return (
                 self.coordinator.get_metadata(
-                    "storage_details"
+                    "storage_status"
                 )
             )
-
         return None
 
     @property
@@ -637,8 +636,47 @@ class LifepowrMetadataSensor(
                     ),
             }
 
+        if (
+            self._definition["key"]
+            == "connected_status"
+        ):
+            return {
+                "network_status_message":
+                    self.coordinator.get_metadata(
+                        "connected_message"
+                    ),
+                "interface":
+                    self.coordinator.get_metadata(
+                        "connected_interface"
+                    ),
+                "ipv4":
+                    self.coordinator.get_metadata(
+                        "ipv4_address"
+                    ),
+                "ipv6":
+                    self.coordinator.get_metadata(
+                        "ipv6_address"
+                    ),
+            }
+        if (
+            self._definition["key"]
+            == "storage_details"
+        ):
+            return {
+                "id":
+                    self.coordinator.get_metadata(
+                        "storage_id"
+                    ),
+                "date":
+                    self.coordinator.get_metadata(
+                        "storage_date"
+                    ),
+                "serial":
+                    self.coordinator.get_metadata(
+                        "storage_serial"
+                    ),
+            }
         return {}
-
 # ============================================================
 # EMS SENSORS
 # ============================================================

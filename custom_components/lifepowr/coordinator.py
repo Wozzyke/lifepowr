@@ -173,13 +173,76 @@ class LifepowrCoordinator(DataUpdateCoordinator):
 
                 if mapped_key == "connected":
 
-                    self._cache["metadata"][
-                        "connected_status"
-                    ] = value.get(
+                    details = value.get(
                         "details",
                         ""
                     ).strip()
-                
+
+                    import re
+
+                    parts = [
+                        part.strip()
+                        for part in details.split("|")
+                    ]
+
+                    #
+                    # State
+                    #
+                    if len(parts) > 0:
+                        self._cache["metadata"][
+                            "connected_status"
+                        ] = parts[0]
+
+                    #
+                    # Network message
+                    #
+                    if len(parts) > 1:
+                        self._cache["metadata"][
+                            "connected_message"
+                        ] = parts[1]
+
+                    #
+                    # Interface + IPs
+                    #
+                    if len(parts) > 2:
+
+                        match = re.search(
+                            r"IPs\s+([^(]+)\((.*?)\)",
+                            parts[2],
+                        )
+
+                        if match:
+
+                            interface = match.group(1).strip()
+
+                            addresses = (
+                                match.group(2)
+                                .split()
+                            )
+
+                            ipv4 = None
+                            ipv6 = None
+
+                            for addr in addresses:
+
+                                if "." in addr:
+                                    ipv4 = addr
+
+                                elif ":" in addr:
+                                    ipv6 = addr
+
+                            self._cache["metadata"][
+                                "connected_interface"
+                            ] = interface
+
+                            self._cache["metadata"][
+                                "ipv4_address"
+                            ] = ipv4
+
+                            self._cache["metadata"][
+                                "ipv6_address"
+                            ] = ipv6
+
                 if mapped_key == "eastron":
                     details = value.get(
                         "details",
@@ -394,24 +457,46 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                         ] = gridtype_match.group(1).strip()
                 if mapped_key == "storage":
 
-                    self._cache["metadata"][
-                        "storage_details"
-                    ] = value.get(
+                    details = value.get(
                         "details",
                         ""
                     ).strip()
 
+                    import json
 
+                    try:
 
+                        storage = json.loads(
+                            details
+                        )
 
+                        self._cache["metadata"][
+                            "storage_status"
+                        ] = "Online"
 
+                        self._cache["metadata"][
+                            "storage_id"
+                        ] = storage.get(
+                            "id"
+                        )
 
+                        self._cache["metadata"][
+                            "storage_date"
+                        ] = storage.get(
+                            "date"
+                        )
 
+                        self._cache["metadata"][
+                            "storage_serial"
+                        ] = storage.get(
+                            "serial"
+                        )
 
+                    except Exception:
 
-
-
-
+                        self._cache["metadata"][
+                            "storage_status"
+                        ] = details
             self.async_set_updated_data(
                 self._cache
             )
