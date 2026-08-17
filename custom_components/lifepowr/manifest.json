@@ -1,0 +1,20 @@
+{
+  "domain": "lifepowr",
+  "name": "LifePowr FlexiO",
+  "version": "0.9.5",
+  "documentation": "https://github.com/Wozzyke/lifepowr.git",
+  "issue_tracker": "https://github.com/Wozzyke/lifepowr/issues",
+  "config_flow": true,
+  "iot_class": "local_push",
+  "integration_type": "hub",
+  "dependencies": [],
+  "requirements": [
+    "aiohttp>=3.9.0"
+  ],
+  "codeowners": [
+    "@frederiklacroix"
+  ],
+  "loggers": [
+    "custom_components.lifepowr"
+  ]
+}

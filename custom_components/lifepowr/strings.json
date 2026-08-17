@@ -1,0 +1,136 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LifePowr FlexiO",
+        "description": "Configure a local LifePowr FlexiO gateway.",
+        "data": {
+          "host": "Host or IP address"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This LifePowr FlexiO gateway is already configured."
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the LifePowr gateway.",
+      "unknown": "Unexpected error."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "LifePowr FlexiO Options",
+        "description": "Configure integration options."
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "aws_qos": {
+        "name": "AWS QoS"
+      },
+      "aws_broker_ready": {
+        "name": "AWS Broker Ready"
+      },
+      "bms": {
+        "name": "BMS"
+      },
+      "connected": {
+        "name": "Connected"
+      },
+      "ev_discovery": {
+        "name": "EV Discovery"
+      },
+      "inverter": {
+        "name": "Inverter"
+      },
+      "iomanager": {
+        "name": "IO Manager"
+      },
+      "modbus": {
+        "name": "Modbus"
+      },
+      "p1": {
+        "name": "P1"
+      }
+    },
+    "sensor": {
+      "fcr_baseline": {
+        "name": "FCR Baseline"
+      },
+      "fcr_measurement": {
+        "name": "FCR Measurement"
+      },
+      "fcr_error": {
+        "name": "FCR Error"
+      },
+      "fcr_margin_charge": {
+        "name": "FCR Available Margin Charge"
+      },
+      "fcr_margin_discharge": {
+        "name": "FCR Available Margin Discharge"
+      },
+      "fcr_response_power": {
+        "name": "FCR Charge Discharge Power"
+      },
+      "fcr_bsp": {
+        "name": "FCR BSP"
+      },
+      "fcr_stream": {
+        "name": "FCR Stream"
+      },
+      "belpex_average": {
+        "name": "Belpex Average"
+      },
+      "board_model": {
+        "name": "Board"
+      },
+      "fcr_tender_price": {
+        "name": "FCR Tender Price"
+      },
+      "soc_lim_penalty": {
+        "name": "SOC Limit Penalty"
+      },
+      "fcr_baseline_jump_penalty": {
+        "name": "FCR Baseline Jump Penalty"
+      },
+      "fcr_shortfall_penalty": {
+        "name": "FCR Shortfall Penalty"
+      },
+      "implied_shortfall_additive_penalty": {
+        "name": "Implied Shortfall Additive Penalty"
+      },
+      "implied_shortfall_multiplicative_penalty": {
+        "name": "Implied Shortfall Multiplicative Penalty"
+      },
+      "fcr_allocation_jump_penalty": {
+        "name": "FCR Allocation Jump Penalty"
+      },
+      "lipschitz_constant": {
+        "name": "Lipschitz Constant"
+      },
+      "fcr_extra_soc_reserve": {
+        "name": "FCR Extra SOC Reserve"
+      },
+      "safe_max_fcr_allocation": {
+        "name": "Safe Max FCR Allocation"
+      },
+      "expected_peak_activation_down": {
+        "name": "Expected Peak Activation Down"
+      },
+      "fcr_max_increase": {
+        "name": "FCR Max Increase"
+      },
+      "fcr_max_decrease": {
+        "name": "FCR Max Decrease"
+      },
+      "setpoint_transmisssion_error_penalty_factor": {
+        "name": "Setpoint Transmission Error Penalty Factor"
+      },
+      "enable_reserve_mode": {
+        "name": "Reserve Mode Enabled"
+      }
+    }
+  }
+}

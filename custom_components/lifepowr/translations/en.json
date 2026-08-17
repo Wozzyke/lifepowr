@@ -1,0 +1,20 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LifePowr FlexiO",
+        "description": "Configure a local LifePowr FlexiO gateway.",
+        "data": {
+          "host": "Host or IP address"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This LifePowr FlexiO gateway is already configured."
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the LifePowr gateway.",
+      "unknown": "Unexpected error."
+    }
+  }
+}
