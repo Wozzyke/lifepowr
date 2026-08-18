@@ -1,108 +1,128 @@
-# LifePowr FlexiO
+<p align="center">
+  <img src="docs/logo.png" width"center">LifePowr FlexiO</h1>
 
-Home Assistant integration for the **LifePowr FlexiO Energy Management System**.
+<p align="center">
+  Home Assistant integration for the LifePowr FlexiO Energy Management System
+</p>
 
-This integration connects directly to a local LifePowr FlexiO gateway using the built-in WebSocket interface and exposes diagnostics, telemetry, EMS configuration and FCR-related data to Home Assistant.
+<p align="center">
+  <img src="https://img.shields.io/badge/Home%20Assistant-2026.7%<img src="https://img.shields.io/github/license/Wozzyke/lifepowrc="https://img.shields.io/github/v/release/Wozowr
+  <img src="https://img.shields.ioS-Custom-orange
+</p>
 
-![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.7%2B-blue)
-![Version](https://img.shields.io/b
-## Features
+---
 
-### Diagnostics
+The **LifePowr FlexiO** integration connects directly to a local FlexiO gateway using its WebSocket interface and exposes diagnostics, telemetry, EMS configuration and FCR-related data to Home Assistant.
+
+## Screenshot
+
+<p align="center">
+  docs/dashboard.png
+</p>
+
+---
+
+# Features
+
+## Diagnostics
 
 Exposes diagnostic information from the FlexiO gateway:
 
 - AWS connectivity
 - BMS status
-- Inverter status
-- P1 status
-- Modbus status
+- Connected status
 - EV discovery
+- Inverter status
 - IO Manager status
+- Modbus status
+- P1 status
 - Board information
 
-### FCR Telemetry
+## FCR Telemetry
 
-Real-time FCR telemetry:
+Real-time Frequency Containment Reserve (FCR) telemetry:
 
 - FCR Baseline
 - FCR Measurement
 - FCR Error
 - Available Charge Margin
 - Available Discharge Margin
-- Charge/Discharge Power
+- Charge / Discharge Power
 
-### FCR Tender Prices
+## FCR Tender Prices
 
 Forecast-style entity exposing:
 
-- Current FCR tender price
-- Next price
-- Maximum price
-- Minimum price
-- Average price
-- Complete future forecast
+- Current tender price
+- Next tender price
+- Maximum forecast price
+- Minimum forecast price
+- Average forecast price
+- Complete future price forecast
 
-### EMS Configuration
+## EMS Configuration
 
-Access to EMS optimizer settings:
+Exposes EMS optimizer settings such as:
 
 - SOC Limit Penalty
 - FCR Baseline Jump Penalty
 - FCR Shortfall Penalty
+- FCR Allocation Penalty
 - Safe Max FCR Allocation
-- FCR Reserve Settings
+- Reserve Mode Settings
 - Additional optimization parameters
 
-### Metadata
+## Metadata
 
-Additional information:
+Additional FlexiO metadata:
 
 - Device name
-- Inverter serial number
-- Firmware information
 - Board model
+- Inverter serial number
+- Inverter firmware
 - AWS QoS
 - P1 QoS
 - Modbus QoS
+- Battery storage information
+- Network information (IPv4, IPv6 and interface)
 
 ---
 
-## Installation
+# Installation
 
-### HACS
+## HACS
 
-1. Open HACS
-2. Integrations
-3. Custom repositories
+1. Open **HACS**
+2. Navigate to **Integrations**
+3. Open **Custom repositories**
 4. Add:
 
-```
+```text
 https://github.com/Wozzyke/lifepowr
 ```
 
-5. Category:
+5. Select:
 
-```
+```text
 Integration
 ```
 
-6. Install
+6. Install the integration
 7. Restart Home Assistant
 
 ---
 
-### Manual Installation
+## Manual Installation
 
 Copy:
 
-```
+```text
 custom_components/lifepowr
 ```
 
 to:
 
-```
+```text
 config/custom_components/lifepowr
 ```
 
@@ -110,44 +130,46 @@ Restart Home Assistant.
 
 ---
 
-## Configuration
+# Configuration
 
-1. Go to:
+1. Open:
 
-```
+```text
 Settings
 → Devices & Services
-→ Add Integration
 ```
 
-2. Search for:
+2. Click:
 
+```text
+Add Integration
 ```
+
+3. Search for:
+
+```text
 LifePowr FlexiO
 ```
 
-3. Enter:
-
-- Hostname
-- IP address
+4. Enter the hostname or IP address of the FlexiO gateway.
 
 Example:
 
-```
+```text
 192.168.1.100
 ```
 
 ---
 
-## Requirements
+# Requirements
 
 - LifePowr FlexiO gateway
-- Local network access
+- Local network connectivity
 - Home Assistant 2026.7 or newer
 
 ---
 
-## Known Limitations
+# Known Limitations
 
 This integration is based on local WebSocket communication with the FlexiO gateway.
 
@@ -155,32 +177,33 @@ Available entities depend on:
 
 - FlexiO firmware version
 - Enabled EMS functionality
-- Available connected devices
+- Connected devices
+- Available telemetry exposed by the gateway
 
 ---
 
-## Support
+# Support
 
-### Issues
+## Issues
 
 Please report bugs via GitHub:
 
 https://github.com/Wozzyke/lifepowr/issues
 
-### Feature Requests
+## Feature Requests
 
 Suggestions and contributions are welcome.
 
 ---
 
-## Disclaimer
+# Disclaimer
 
-This project is not affiliated with or endorsed by LifePowr.
+This project is not affiliated with, endorsed by or supported by LifePowr.
 
 LifePowr and FlexiO are trademarks of their respective owners.
 
 ---
 
-## License
+# License
 
 MIT License
