@@ -14,12 +14,6 @@
 
 The **LifePowr FlexiO** integration connects directly to a local FlexiO gateway using its WebSocket interface and exposes diagnostics, telemetry, EMS configuration and FCR-related data to Home Assistant.
 
-## Screenshot
-
-<p align="center">
-  docs/dashboard.png
-</p>
-
 ---
 
 # Features
