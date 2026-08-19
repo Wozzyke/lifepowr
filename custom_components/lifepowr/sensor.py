@@ -180,8 +180,13 @@ class LifepowrFCRTenderSensor(
             []
         )
 
-        for value in values:
+        if not isinstance(
+            values,
+            list,
+        ):
+            return None
 
+        for value in values:
             numeric = self._safe_numeric(
                 value
             )
@@ -208,6 +213,18 @@ class LifepowrFCRTenderSensor(
             "values",
             []
         )
+
+        if not isinstance(
+            timestamps,
+            list,
+        ):
+            timestamps = []
+
+        if not isinstance(
+            values,
+            list,
+        ):
+            values = []
         forecast = []
         numeric_values = []
         for ts, value in zip(
