@@ -548,14 +548,28 @@ class LifepowrCoordinator(DataUpdateCoordinator):
 
         topic = payload.get("topic")
 
-        if not topic:
+        #
+        # Topic must be a non-empty string
+        #
+        if (
+            not isinstance(
+                topic,
+                str,
+            )
+            or not topic.strip()
+        ):
+            _LOGGER.debug(
+                "Ignoring malformed topic: %r",
+                topic,
+            )
             return
+
         self.connected = True
         self.last_message = datetime.utcnow()
+
         message = payload.get("message")
 
         self.topics[topic] = message
-
         try:
 
             if topic.startswith("diagnostics/"):
