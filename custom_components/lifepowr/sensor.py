@@ -14,6 +14,7 @@ from homeassistant.helpers.entity_platform import (
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
 )
+import math
 from datetime import UTC, datetime
 from .const import (
     DEVICE_FCR,
@@ -125,6 +126,27 @@ class LifepowrFCRTenderSensor(
         self._attr_native_unit_of_measurement = (
             definition.get("unit")
         )
+    def _safe_numeric(
+        self,
+        value,
+    ) -> float | None:
+        """Convert value to float."""
+
+        try:
+            numeric = float(value)
+
+            if not math.isfinite(
+                numeric
+            ):
+                return None
+
+            return numeric
+
+        except (
+            TypeError,
+            ValueError,
+        ):
+            return None
     @property
     def device_info(self) -> DeviceInfo:
         """Device information."""
@@ -154,10 +176,17 @@ class LifepowrFCRTenderSensor(
             []
         )
 
-        if not values:
-            return None
+        for value in values:
 
-        return values[0]
+            numeric = self._safe_numeric(
+                value
+            )
+
+            if numeric is not None:
+                return numeric
+
+        return None
+    
     @property
     def extra_state_attributes(self):
         """Forecast data."""
@@ -175,60 +204,91 @@ class LifepowrFCRTenderSensor(
             "values",
             []
         )
-
         forecast = []
-
+        numeric_values = []
         for ts, value in zip(
-            timestamps,
-            values,
+            timestamps[:96],
+            values[:96],
         ):
+
+            #
+            # Validate timestamp
+            #
+            try:
+                timestamp = datetime.fromtimestamp(
+                    float(ts),
+                    UTC,
+                )
+
+            except (
+                TypeError,
+                ValueError,
+                OSError,
+            ):
+                continue
+
+            #
+            # Validate value
+            #
+            numeric = self._safe_numeric(
+                value
+            )
+
+            if numeric is None:
+                continue
+
+            numeric_values.append(
+                numeric
+            )
+
             forecast.append(
                 {
-                    "datetime": datetime.fromtimestamp(
-                        ts,
-                        UTC,
-                    ).isoformat(),
-                    "price": value,
+                    "datetime":
+                        timestamp.isoformat(),
+                    "price":
+                        numeric,
                 }
             )
         return {
             "forecast": forecast,
             "forecast_count": len(values),
             "current_price":
-                values[0]
-                if values
+                numeric_values[0]
+                if numeric_values
                 else None,
             "next_price":
-                values[1]
-                if len(values) > 1
-                else None,
-            "max_price":
-                max(values)
-                if values
+                numeric_values[1]
+                if len(numeric_values) > 1
                 else None,
             "max_nonzero_price":
                 max(
                     v
-                    for v in values
+                    for v in numeric_values
                     if v > 0
                 )
                 if any(
                     v > 0
-                    for v in values
+                    for v in numeric_values
                 )
                 else None,
-            "min_price":
-                min(values)
-                if values
+            "max_price":
+                max(numeric_values)
+                if numeric_values
                 else None,
+
+            "min_price":
+                min(numeric_values)
+                if numeric_values
+                else None,
+
             "average_price":
                 (
-                    sum(values)
-                    / len(values)
+                    sum(numeric_values)
+                    / len(numeric_values)
                 )
-                if values
+                if numeric_values
                 else None,
-        }
+}
 # ============================================================
 # FCR SENSORS
 # ============================================================

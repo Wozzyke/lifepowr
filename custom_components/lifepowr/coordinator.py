@@ -26,6 +26,42 @@ from .websocket import LifepowrWebSocket
 
 _LOGGER = logging.getLogger(__name__)
 
+def parse_bool(
+    value,
+) -> bool:
+    """Convert common boolean representations."""
+
+    if isinstance(
+        value,
+        bool,
+    ):
+        return value
+
+    if isinstance(
+        value,
+        str,
+    ):
+        return (
+            value.strip()
+            .lower()
+            in (
+                "true",
+                "1",
+                "yes",
+                "on",
+            )
+        )
+
+    if isinstance(
+        value,
+        (
+            int,
+            float,
+        ),
+    ):
+        return value != 0
+
+    return False
 
 class LifepowrCoordinator(DataUpdateCoordinator):
     """LifePowr coordinator."""
@@ -909,39 +945,3 @@ class LifepowrCoordinator(DataUpdateCoordinator):
             )
         )
 
-    def parse_bool(
-        value,
-    ) -> bool:
-        """Convert common boolean representations."""
-
-        if isinstance(
-            value,
-            bool,
-        ):
-            return value
-
-        if isinstance(
-            value,
-            str,
-        ):
-            return (
-                value.strip()
-                .lower()
-                in (
-                    "true",
-                    "1",
-                    "yes",
-                    "on",
-                )
-            )
-
-        if isinstance(
-            value,
-            (
-                int,
-                float,
-            ),
-        ):
-            return value != 0
-
-        return False

@@ -23,8 +23,10 @@ from .const import (
     MANUFACTURER,
     MODEL,
 )
-from .coordinator import LifepowrCoordinator
-
+from .coordinator import (
+    LifepowrCoordinator,
+    parse_bool,
+)
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -117,9 +119,7 @@ class LifepowrDiagnosticBinarySensor(
                     "aws_broker_ready"
                 )
             )
-
-            return bool(value)
-
+            return parse_bool(value)
         diagnostic = (
             self.coordinator.get_diagnostic(
                 key
