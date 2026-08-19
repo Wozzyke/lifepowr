@@ -11,6 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Home%20Assistant-2026.7%2B-blue">
   <img src="https://img.shields.io/badge/HACS-Custom-orange">
+  <img src="https://img.shields.io/github/v/release/Wozzyke/lifepowr"
 </p>
 
 ---
