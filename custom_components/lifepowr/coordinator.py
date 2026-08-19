@@ -62,7 +62,18 @@ def parse_bool(
         return value != 0
 
     return False
+def parse_string(
+    value,
+) -> str:
+    """Convert value to string."""
 
+    if isinstance(
+        value,
+        str,
+    ):
+        return value
+
+    return ""
 class LifepowrCoordinator(DataUpdateCoordinator):
     """LifePowr coordinator."""
 
@@ -189,17 +200,19 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 if mapped_key == "board":
                     self._cache["metadata"][
                         "board_model"
-                    ] = value.get(
-                        "details",
-                        ""
+                    ] = parse_string(
+                        value.get(
+                            "details"
+                        )
                     )
                 #
                 # Device name
                 #
                 if mapped_key == "configured":
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     )
                     parts = details.split(":", 1)
                     if len(parts) == 2:
@@ -213,11 +226,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
 
                 if mapped_key == "connected":
 
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     ).strip()
-
                     import re
 
                     parts = [
@@ -284,9 +297,10 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                             ] = ipv6
 
                 if mapped_key == "eastron":
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     )
                     import re
                     match = re.search(
@@ -302,28 +316,37 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 if mapped_key == "ev":
                     self._cache["metadata"][
                         "ev_status"
-                    ] = value.get(
-                        "details",
-                        ""
-                    ).strip()
+                    ] = parse_string(
+                            value.get(
+                                "details"
+                            )
+                        ).strip()
                 if mapped_key == "ev_discovery":
 
                     self._cache["metadata"][
                         "ev_discovery"
-                    ] = value.get(
-                        "details",
-                        ""
-                    ).strip()
+                    ] = parse_string(
+                            value.get(
+                                "details"
+                            )
+                        ).strip()
 
                 if mapped_key == "inverter":
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     )
                     data = value.get(
                         "data",
                         {}
                     )
+
+                    if not isinstance(
+                        data,
+                        dict,
+                    ):
+                        data = {}
                     import re
                     #
                     # Inverter Status
@@ -369,41 +392,45 @@ class LifepowrCoordinator(DataUpdateCoordinator):
 
                     self._cache["metadata"][
                         "ioapi"
-                    ] = value.get(
-                        "details",
-                        ""
-                    ).strip()
+                    ] = parse_string(
+                            value.get(
+                                "details"
+                            )
+                        ).strip()
                 if mapped_key == "iodaemon":
 
                     self._cache["metadata"][
                         "iodaemon"
-                    ] = value.get(
-                        "details",
-                        ""
-                    ).strip()
+                    ] = parse_string(
+                            value.get(
+                                "details"
+                            )
+                        ).strip()
                 if mapped_key == "iomanager":
 
                     self._cache["metadata"][
                         "iomanager"
-                    ] = value.get(
-                        "details",
-                        ""
-                    ).strip()
+                    ] = parse_string(
+                            value.get(
+                                "details"
+                            )
+                        ).strip()
                 if mapped_key == "update":
 
                     self._cache["metadata"][
                         "update_status"
-                    ] = value.get(
-                        "details",
-                        ""
-                    ).strip()
+                    ] = parse_string(
+                            value.get(
+                                "details"
+                            )
+                        ).strip()
                 if mapped_key == "modbus":
 
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     )
-
                     import re
 
                     #
@@ -448,11 +475,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                     ] = clean_details.strip()
                 if mapped_key == "p1":
 
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     )
-
                     import re
 
                     #
@@ -497,11 +524,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                         ] = gridtype_match.group(1).strip()
                 if mapped_key == "storage":
 
-                    details = value.get(
-                        "details",
-                        ""
+                    details = parse_string(
+                        value.get(
+                            "details"
+                        )
                     ).strip()
-
                     import json
 
                     try:
@@ -510,6 +537,13 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                             details
                         )
 
+                        if not isinstance(
+                            storage,
+                            dict,
+                        ):
+                            raise ValueError(
+                                "Storage payload is not a dictionary"
+                            )
                         self._cache["metadata"][
                             "storage_status"
                         ] = "Online"
@@ -541,11 +575,13 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                         self._cache["metadata"][
                             "storage_status"
                         ] = details
+            self.connected = True
+            self.last_message = datetime.utcnow()
+
             self.async_set_updated_data(
                 self._cache
             )
             return
-
         topic = payload.get("topic")
 
         #
@@ -614,6 +650,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
     ) -> None:
         """Handle diagnostics topics."""
 
+        if not isinstance(
+            message,
+            dict,
+        ):
+            return
         raw_key = topic.split("/")[-1]
 
         mapping = {
@@ -629,12 +670,12 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "status",
                 False,
             ),
-            "details": message.get(
-                "details",
-                "",
+            "details": parse_string(
+                message.get(
+                    "details"
+                )
             ),
         }
-
         #
         # Inverter metadata
         #
@@ -646,6 +687,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "data",
                 {},
             )
+            if not isinstance(
+                data,
+                dict,
+            ):
+                data = {}
 
             self._cache["metadata"][
                 "inverter_serial"
@@ -670,9 +716,10 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         #         )
         #     )
         if topic == TOPIC_DIAGNOSTICS_AWS:
-            details = message.get(
-                "details",
-                "",
+            details = parse_string(
+                message.get(
+                    "details"
+                )
             )
             diagnostic["qos_text"] = details
             import re
@@ -690,9 +737,10 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         # BMS status and model
         #
         if topic == TOPIC_DIAGNOSTICS_BMS:
-            details = message.get(
-                "details",
-                ""
+            details = parse_string(
+                message.get(
+                    "details"
+                )
             )
             import re
             #
@@ -721,13 +769,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         # P1 QoS
         #
         if topic == TOPIC_DIAGNOSTICS_P1:
-            diagnostic["p1_info"] = (
+            diagnostic["p1_info"] = parse_string(
                 message.get(
-                    "details",
-                    "",
+                    "details"
                 )
             )
-
         self._cache["diagnostics"][
             key
         ] = diagnostic
@@ -738,9 +784,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
     ) -> None:
         """Handle FCR updates."""
 
-        if not message:
+        if not isinstance(
+            message,
+            dict,
+        ):
             return
-
         #
         # Actual metrics are nested inside
         # message.message
@@ -799,9 +847,12 @@ class LifepowrCoordinator(DataUpdateCoordinator):
     ) -> None:
         """Handle cloud fleet updates."""
 
-        if not message:
+        if not isinstance(
+            message,
+            dict,
+        ):
             return
-        #
+    #
         # FCR Tender forecast
         #
         fcr_tender = message.get(
