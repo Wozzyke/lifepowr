@@ -76,25 +76,14 @@ class LifepowrCoordinator(DataUpdateCoordinator):
 
     def start(self) -> None:
         """Start websocket listener."""
-        _LOGGER.warning(
-            "COORDINATOR START CALLED"
-        )
         self._task = self.hass.async_create_task(
             self.websocket.start()
-        )
-        _LOGGER.warning(
-            "COORDINATOR START FINISHED"
         )
         return
     async def stop(self) -> None:
         """Stop websocket."""
 
         import asyncio
-
-        _LOGGER.warning(
-            "LIFEPOWR STOP CALLED"
-        )
-
         await self.websocket.stop()
 
         if self._task:
@@ -105,10 +94,6 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 await self._task
             except asyncio.CancelledError:
                 pass
-
-        _LOGGER.warning(
-            "LIFEPOWR STOP FINISHED"
-        )
     async def _process_message(
         self,
         payload: dict,

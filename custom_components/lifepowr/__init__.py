@@ -56,12 +56,6 @@ async def async_setup_entry(
             async_reload_entry
         )
     )
-
-    _LOGGER.info(
-        "LifePowr FlexiO integration started (%s)",
-        host,
-    )
-
     return True
 
 
@@ -97,11 +91,6 @@ async def async_unload_entry(
             DOMAIN,
             None,
         )
-
-    _LOGGER.info(
-        "LifePowr FlexiO integration stopped"
-    )
-
     return True
 
 

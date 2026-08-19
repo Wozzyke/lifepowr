@@ -44,18 +44,9 @@ class LifepowrWebSocket:
         """Start websocket reconnect loop."""
 
         self._running = True
-        _LOGGER.warning(
-        "WEBSOCKET START ENTERED"
-        )
         while self._running:
             try:
-                _LOGGER.warning(
-                    "CALLING _connect()"
-                )
                 await self._connect()
-                _LOGGER.warning(
-                    "_connect() RETURNED"
-                )
             except asyncio.CancelledError:
                 raise
             except Exception:
@@ -64,140 +55,74 @@ class LifepowrWebSocket:
                 )
 
             if self._running:
-                _LOGGER.warning(
-                    "Disconnected from LifePowr, reconnecting in 5 seconds"
-                )
-
                 await asyncio.sleep(5)
 
     async def stop(self) -> None:
         """Stop websocket."""
-        _LOGGER.warning(
-            "WEBSOCKET STOP CALLED"
-        )
         self._running = False
-
-        _LOGGER.warning(
-            "LifePowr websocket stopping"
-        )
-
         if self._ws and not self._ws.closed:
-
             await self._ws.close()
-
         if self._session:
-
             await self._session.close()
-
-        _LOGGER.warning(
-            "LifePowr websocket stopped"
-        )
     async def _connect(self) -> None:
         """Connect to LifePowr websocket."""
-
-        _LOGGER.info(
-            "Connecting to LifePowr websocket %s",
-            self.websocket_url,
-        )
-
         async with aiohttp.ClientSession() as session:
             self._session = session
-            _LOGGER.warning(
-                "OPENING WEBSOCKET"
-            )
             async with session.ws_connect(
                 self.websocket_url,
                 heartbeat=30,
             ) as ws:
-
                 self._ws = ws
-                _LOGGER.warning(
-                    "WEBSOCKET CONNECTED"
-                )
-                _LOGGER.info(
-                    "Connected to LifePowr websocket"
-                )
-                _LOGGER.warning(
-                    "SUBSCRIBE START"
-                )
                 await self._subscribe(ws)
-                _LOGGER.warning(
-                    "SUBSCRIBE FINISHED"
-                )
                 while self._running:
-
                     try:
-
                         msg = await ws.receive()
-
                     except asyncio.CancelledError:
                         raise
-
                     if msg.type == aiohttp.WSMsgType.TEXT:
-
                         await self._handle_text(
                             msg.data
                         )
-
                     elif msg.type in (
                         aiohttp.WSMsgType.CLOSED,
                         aiohttp.WSMsgType.CLOSE,
                     ):
                         break
-
                     elif msg.type == aiohttp.WSMsgType.ERROR:
                         break
-
                 self._ws = None
     async def _subscribe(
         self,
         ws: aiohttp.ClientWebSocketResponse,
     ) -> None:
         """Subscribe to telemetry streams."""
-
         #
         # Based on protocol discovery.
         #
         await ws.send_str("scan/diagnostics/*")
         await ws.send_str("listen/diagnostics/*")
         await ws.send_str("listen/*")
-
-        _LOGGER.debug(
-            "Subscribed using listen/*"
-        )
-
     async def _handle_text(
         self,
         raw_message: str,
     ) -> None:
         """Process websocket frame."""
-
         try:
             payload = json.loads(raw_message)
-
         except json.JSONDecodeError:
-            _LOGGER.debug(
-                "Non-JSON frame: %s",
-                raw_message,
-            )
             return
-
         topic = payload.get("topic")
-
         if topic:
             _LOGGER.debug(
                 "Topic received: %s",
                 topic,
             )
-
         try:
             await self._callback(payload)
-
         except Exception:
             _LOGGER.exception(
                 "Message callback failed"
             )
-
 
 def extract_topic(payload: dict) -> str | None:
     """Return topic from payload."""

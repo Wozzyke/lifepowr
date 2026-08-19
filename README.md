@@ -1,6 +1,7 @@
 <p align="center">
-  <img src="docs/logo.png" width"180">LifePowr FlexiO</h1>
-
+  <img src="docs/logo.png" width"180px">
+</p>
+<h1>LifePowr FlexiO</h1>
 <p align="center">
   Home Assistant integration for the LifePowr FlexiO Energy Management System
 </p>
@@ -166,7 +167,6 @@ Example:
 # Known Limitations
 
 This integration is based on local WebSocket communication with the FlexiO gateway.
-
 Available entities depend on:
 
 - FlexiO firmware version
@@ -176,12 +176,22 @@ Available entities depend on:
 
 ---
 
+# Known Issues
+
+## Integration startup warning
+
+Home Assistant may occasionally report that the LifePowr FlexiO integration is taking a long time to set up.
+The current implementation starts WebSocket subscriptions immediately during initialization and begins processing incoming topic data straight away. This can trigger Home Assistant's startup watchdog, especially on slower systems.
+The integration continues to function normally after startup.
+This behavior is planned to be improved in a future release.
+
+---
+
 # Support
 
 ## Issues
 
 Please report bugs via GitHub:
-
 https://github.com/Wozzyke/lifepowr/issues
 
 ## Feature Requests
@@ -193,7 +203,6 @@ Suggestions and contributions are welcome.
 # Disclaimer
 
 This project is not affiliated with, endorsed by or supported by LifePowr.
-
 LifePowr and FlexiO are trademarks of their respective owners.
 
 ---
