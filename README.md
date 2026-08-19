@@ -1,5 +1,5 @@
 <p align="center">
-  docs/logo.png
+  <img width="180px">docs/logo.png</img>
 </p>
 
 <h1 align="center">LifePowr FlexiO</h1>
@@ -9,9 +9,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Home%20Assistant-2026.7%<img src="httpselds.io/github/license/Wozzyke/lifepowr
-  <img src="https://img.shields.io/github/Wozzyke/lifepowr
-  <img src="https://img.shields.io/badge/HACSange
+  <img src="https://img.shields.io/badge/Home%20Assistant-2026.7%">
+  <img src="httpselds.io/github/license/Wozzyke/lifepowr">
+  <img src="https://img.shields.io/github/Wozzyke/lifepowr">
+  <img src="https://img.shields.io/badge/HACSange">
 </p>
 
 ---
