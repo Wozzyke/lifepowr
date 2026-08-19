@@ -107,23 +107,57 @@ class LifepowrWebSocket:
         raw_message: str,
     ) -> None:
         """Process websocket frame."""
+
         try:
-            payload = json.loads(raw_message)
+            payload = json.loads(
+                raw_message
+            )
+
         except json.JSONDecodeError:
+
+            _LOGGER.debug(
+                "Ignoring invalid JSON frame"
+            )
+
             return
-        topic = payload.get("topic")
+
+        #
+        # Only process JSON objects.
+        #
+        if not isinstance(
+            payload,
+            dict,
+        ):
+
+            _LOGGER.debug(
+                "Ignoring non-object JSON payload: %s",
+                type(payload).__name__,
+            )
+
+            return
+
+        topic = payload.get(
+            "topic"
+        )
+
         if topic:
+
             _LOGGER.debug(
                 "Topic received: %s",
                 topic,
             )
+
         try:
-            await self._callback(payload)
+
+            await self._callback(
+                payload
+            )
+
         except Exception:
+
             _LOGGER.exception(
                 "Message callback failed"
             )
-
 def extract_topic(payload: dict) -> str | None:
     """Return topic from payload."""
 
