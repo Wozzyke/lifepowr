@@ -1,7 +1,7 @@
 {
   "domain": "lifepowr",
   "name": "LifePowr FlexiO",
-  "version": "0.9.5",
+  "version": "1.0.0",
   "documentation": "https://github.com/Wozzyke/lifepowr.git",
   "issue_tracker": "https://github.com/Wozzyke/lifepowr/issues",
   "config_flow": true,
