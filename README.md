@@ -10,8 +10,6 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Home%20Assistant-2026.7%2B-blue">
-  <img src="https://img.shields.io/github/license/Wozzyke/lifepowr">
-  <img src="https://img.shields.io/github/stars/Wozzyke/lifepowr">
   <img src="https://img.shields.io/badge/HACS-Custom-orange">
 </p>
 
