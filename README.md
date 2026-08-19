@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo.png" width"center">LifePowr FlexiO</h1>
+  <img src="docs/logo.png" width"180">LifePowr FlexiO</h1>
 
 <p align="center">
   Home Assistant integration for the LifePowr FlexiO Energy Management System
