@@ -164,6 +164,10 @@ class LifepowrFCRTenderSensor(
             configuration_url=f"http://{self.coordinator.host}",
         )
     @property
+    def available(self) -> bool:
+        """Entity availability."""
+        return self.coordinator.is_available()
+    @property
     def native_value(self):
         """Return current FCR price."""
 
@@ -251,7 +255,7 @@ class LifepowrFCRTenderSensor(
             )
         return {
             "forecast": forecast,
-            "forecast_count": len(values),
+            "forecast_count": len(numeric_values),
             "current_price":
                 numeric_values[0]
                 if numeric_values
@@ -352,7 +356,11 @@ class LifepowrFCRSensor(
             model=MODEL,
             configuration_url=f"http://{self.coordinator.host}",
         )    
+    @property
+    def available(self) -> bool:
+        """Entity availability."""
 
+        return self.coordinator.is_available()
     @property
     def native_value(self):
         """Return sensor value."""
@@ -465,7 +473,10 @@ class LifepowrMetadataSensor(
             model=MODEL,
             configuration_url=f"http://{self.coordinator.host}",
         )
-    
+    @property
+    def available(self) -> bool:
+        """Entity availability."""
+        return self.coordinator.is_available()    
     @property
     def native_value(self):
         """Return state."""
@@ -793,3 +804,8 @@ class LifepowrEMSConfSensor(
             model=MODEL,
             configuration_url=f"http://{self.coordinator.host}",
         )
+    @property
+    def available(self) -> bool:
+        """Entity availability."""
+
+        return self.coordinator.is_available()    

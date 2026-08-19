@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -109,6 +109,8 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         )
 
         self._task = None
+        self.connected = False
+        self.last_message = None
 
     def start(self) -> None:
         """Start websocket listener."""
@@ -118,7 +120,7 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         return
     async def stop(self) -> None:
         """Stop websocket."""
-
+        self.connected = False
         import asyncio
         await self.websocket.stop()
 
@@ -548,7 +550,8 @@ class LifepowrCoordinator(DataUpdateCoordinator):
 
         if not topic:
             return
-
+        self.connected = True
+        self.last_message = datetime.utcnow()
         message = payload.get("message")
 
         self.topics[topic] = message
@@ -732,7 +735,11 @@ class LifepowrCoordinator(DataUpdateCoordinator):
             "message",
             {}
         )
-
+        if not isinstance(
+            payload,
+            dict,
+        ):
+            return
         self._cache["fcr"] = {
             "baseline": payload.get(
                 "frequencyResponseBaseline"
@@ -842,7 +849,19 @@ class LifepowrCoordinator(DataUpdateCoordinator):
     #
     # Helper methods for entities
     #
+    def is_available(self) -> bool:
+        """Return coordinator availability."""
 
+        if not self.connected:
+            return False
+
+        if not self.last_message:
+            return False
+
+        return (
+            datetime.utcnow()
+            - self.last_message
+        ) < timedelta(minutes=2)
     def get_diagnostic(
         self,
         key: str,

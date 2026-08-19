@@ -139,7 +139,7 @@ class LifepowrDiagnosticBinarySensor(
     def available(self) -> bool:
         """Entity availability."""
 
-        return True
+        return self.coordinator.is_available()
 
     @property
     def extra_state_attributes(
