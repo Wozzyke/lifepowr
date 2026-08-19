@@ -113,12 +113,29 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "message",
                 {}
             )
-
+            if not isinstance(
+                diagnostics,
+                dict,
+            ):
+                _LOGGER.debug(
+                "Ignoring malformed diagnostics scan payload"
+                )
+                return
             diagnostics_key_mapping = {
                 "evDiscovery": "ev_discovery",
             }
 
             for key, value in diagnostics.items():
+
+                if not isinstance(
+                    value,
+                    dict,
+                ):
+                    _LOGGER.debug(
+                    "Ignoring malformed diagnostic entry: %s",
+                    key,
+                    )
+                    continue
 
                 mapped_key = diagnostics_key_mapping.get(
                     key,
