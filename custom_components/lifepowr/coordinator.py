@@ -495,6 +495,10 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                         )
 
                     except Exception:
+                        _LOGGER.debug(
+                            "Unable to parse storage payload: %s",
+                            err,
+                        )
 
                         self._cache["metadata"][
                             "storage_status"
