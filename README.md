@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="150px" src="docs/logo.png">
+  <img width="140px" src="docs/logo.png">
 </p>
 
 <h1 align="center">LifePowr FlexiO</h1>
