@@ -494,7 +494,7 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                             "serial"
                         )
 
-                    except Exception:
+                    except Exception as err:
                         _LOGGER.debug(
                             "Unable to parse storage payload: %s",
                             err,
@@ -528,8 +528,9 @@ class LifepowrCoordinator(DataUpdateCoordinator):
             elif topic == TOPIC_AWS_BROKER:
                 self._cache["cloud"][
                     "aws_broker_ready"
-                ] = bool(message)
-
+                ] = parse_bool(
+                    message
+                )
             elif topic == TOPIC_FCR:
                 self._handle_fcr(message)
 
@@ -907,3 +908,40 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 {}
             )
         )
+
+    def parse_bool(
+        value,
+    ) -> bool:
+        """Convert common boolean representations."""
+
+        if isinstance(
+            value,
+            bool,
+        ):
+            return value
+
+        if isinstance(
+            value,
+            str,
+        ):
+            return (
+                value.strip()
+                .lower()
+                in (
+                    "true",
+                    "1",
+                    "yes",
+                    "on",
+                )
+            )
+
+        if isinstance(
+            value,
+            (
+                int,
+                float,
+            ),
+        ):
+            return value != 0
+
+        return False

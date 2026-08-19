@@ -129,13 +129,12 @@ class LifepowrDiagnosticBinarySensor(
         if not diagnostic:
             return False
 
-        return bool(
+        return parse_bool(
             diagnostic.get(
                 "status",
                 False,
             )
         )
-
     @property
     def available(self) -> bool:
         """Entity availability."""
