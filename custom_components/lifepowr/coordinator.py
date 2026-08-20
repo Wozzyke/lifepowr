@@ -606,8 +606,8 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         message = payload.get("message")
 
         self.topics[topic] = message
-        try:
 
+        try:
             if topic.startswith("diagnostics/"):
                 self._handle_diagnostic(
                     topic,
@@ -851,64 +851,116 @@ class LifepowrCoordinator(DataUpdateCoordinator):
             message,
             dict,
         ):
+            _LOGGER.debug(
+                "Ignoring malformed fleet update payload"
+            )
             return
-    #
+
+        _LOGGER.debug(
+            "Fleet update keys received: %s",
+            list(message),
+        )
+
+        #
         # FCR Tender forecast
         #
         fcr_tender = message.get(
-            "fcrTenderPrices",
-            {}
+            "fcrTenderPrices"
         )
 
-        if fcr_tender:
-            self._cache["fcr_tender"] = fcr_tender
+        if isinstance(
+            fcr_tender,
+            dict,
+        ):
+            self._cache[
+                "fcr_tender"
+            ] = fcr_tender
+
         #
         # EMS configuration
         #
         emsconf = message.get(
-            "emsconf",
-            {}
+            "emsconf"
         )
 
-        for key, value in emsconf.items():
-            self._cache["emsconf"][key] = value
-        #
-        # Dynamic electricity pricing
-        #
-        if (
-            "belpex_average"
-            in message
+        if isinstance(
+            emsconf,
+            dict,
         ):
-            self._cache["cloud"][
-                "belpex_average"
-            ] = message[
-                "belpex_average"
-            ]
+            self._cache[
+                "emsconf"
+            ].update(
+                emsconf
+            )
 
+        #
+        # Belpex average
+        #
+        belpex_average = message.get(
+            "belpex_average"
+        )
+
+        if isinstance(
+            belpex_average,
+            (
+                int,
+                float,
+            ),
+        ):
+            self._cache[
+                "cloud"
+            ][
+                "belpex_average"
+            ] = belpex_average
+
+            _LOGGER.debug(
+                "Belpex average stored: %s",
+                belpex_average,
+            )
+
+        #
+        # Dynamic electricity prices
+        #
         prices = message.get(
             "electricityPrices"
         )
 
-        if prices:
-            self._cache["cloud"][
-                "price_points"
-            ] = len(
-                prices.get(
-                    "timestamps",
-                    []
-                )
+        if isinstance(
+            prices,
+            dict,
+        ):
+            timestamps = prices.get(
+                "timestamps",
+                []
             )
 
-            self._cache["cloud"][
+            if not isinstance(
+                timestamps,
+                list,
+            ):
+                timestamps = []
+
+            self._cache[
+                "cloud"
+            ][
+                "price_points"
+            ] = len(
+                timestamps
+            )
+
+            self._cache[
+                "cloud"
+            ][
                 "has_future_prices"
-            ] = (
+            ] = bool(
+                timestamps
+            )
+
+            _LOGGER.debug(
+                "Electricity prices stored: %s points",
                 len(
-                    prices.get(
-                        "timestamps",
-                        []
-                    )
-                )
-                > 0
+                    timestamps
+                ),
             )
 
     #
