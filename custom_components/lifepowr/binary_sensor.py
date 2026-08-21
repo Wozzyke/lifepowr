@@ -86,23 +86,9 @@ class LifepowrDiagnosticBinarySensor(
         )
 
     @property
-    def device_info(
-        self,
-    ) -> DeviceInfo:
-        """Return device information."""
-
-        return DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    self.coordinator.get_device_identifier(),
-                )
-            },
-            name="LifePowr FlexiO",
-            manufacturer=MANUFACTURER,
-            model="Flexio",
-            configuration_url=f"http://{self.coordinator.host}",
-        )    
+    def device_info(self):
+        """Device information."""
+        return self.coordinator.get_device_info()
 
     @property
     def is_on(self) -> bool:

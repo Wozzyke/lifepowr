@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.entity import DeviceInfo
+from .const import DOMAIN, MANUFACTURER, MODEL
 
 from .const import (
     TOPIC_AWS_BROKER,
@@ -25,6 +27,20 @@ from .const import (
 from .websocket import LifepowrWebSocket
 
 _LOGGER = logging.getLogger(__name__)
+
+def get_device_info(self) -> DeviceInfo:
+    return DeviceInfo(
+        identifiers={
+            (
+                DOMAIN,
+                self.get_device_identifier(),
+            )
+        },
+        name=self.get_device_name(),
+        manufacturer=MANUFACTURER,
+        model=MODEL,
+        configuration_url=f"http://{self.host}",
+    )
 
 def parse_bool(
     value,
@@ -132,7 +148,6 @@ class LifepowrCoordinator(DataUpdateCoordinator):
     async def stop(self) -> None:
         """Stop websocket."""
         self.connected = False
-        import asyncio
         await self.websocket.stop()
 
         if self._task:
@@ -608,7 +623,9 @@ class LifepowrCoordinator(DataUpdateCoordinator):
         self.topics[topic] = message
 
         try:
-            if topic.startswith("diagnostics/"):
+            if topic.startswith(
+                "diagnostics/"
+            ):
                 self._handle_diagnostic(
                     topic,
                     message,
@@ -620,10 +637,15 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 ] = parse_bool(
                     message
                 )
+
             elif topic == TOPIC_FCR:
-                self._handle_fcr(message)
+
+                self._handle_fcr(
+                    message
+                )
 
             elif topic == TOPIC_AWS_FLEET_UPDATE:
+
                 self._handle_fleet_update(
                     message
                 )
@@ -642,6 +664,7 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "Failed processing topic %s",
                 topic,
             )
+
 
     def _handle_diagnostic(
         self,
@@ -913,11 +936,6 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "belpex_average"
             ] = belpex_average
 
-            _LOGGER.debug(
-                "Belpex average stored: %s",
-                belpex_average,
-            )
-
         #
         # Dynamic electricity prices
         #
@@ -954,13 +972,6 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "has_future_prices"
             ] = bool(
                 timestamps
-            )
-
-            _LOGGER.debug(
-                "Electricity prices stored: %s points",
-                len(
-                    timestamps
-                ),
             )
 
     #

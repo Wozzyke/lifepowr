@@ -148,21 +148,9 @@ class LifepowrFCRTenderSensor(
         ):
             return None
     @property
-    def device_info(self) -> DeviceInfo:
+    def device_info(self):
         """Device information."""
-
-        return DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    self.coordinator.get_device_identifier(),
-                )
-            },
-            name="LifePowr FlexiO",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            configuration_url=f"http://{self.coordinator.host}",
-        )
+        return self.coordinator.get_device_info()
     @property
     def available(self) -> bool:
         """Entity availability."""
@@ -356,23 +344,9 @@ class LifepowrFCRSensor(
 
 
     @property
-    def device_info(
-        self,
-    ) -> DeviceInfo:
-        """Return device information."""
-
-        return DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    self.coordinator.get_device_identifier(),
-                )
-            },
-            name="LifePowr FlexiO",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            configuration_url=f"http://{self.coordinator.host}",
-        )    
+    def device_info(self):
+        """Device information."""
+        return self.coordinator.get_device_info()
     @property
     def available(self) -> bool:
         """Entity availability."""
@@ -473,23 +447,9 @@ class LifepowrMetadataSensor(
         )
 
     @property
-    def device_info(
-        self,
-    ) -> DeviceInfo:
+    def device_info(self):
         """Device information."""
-
-        return DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    self.coordinator.get_device_identifier(),
-                )
-            },
-            name="LifePowr FlexiO",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            configuration_url=f"http://{self.coordinator.host}",
-        )
+        return self.coordinator.get_device_info()
     @property
     def available(self) -> bool:
         """Entity availability."""
@@ -809,18 +769,8 @@ class LifepowrEMSConfSensor(
 
     @property
     def device_info(self):
-        return DeviceInfo(
-            identifiers={
-                (
-                    DOMAIN,
-                    self.coordinator.get_device_identifier(),
-                )
-            },
-            name="LifePowr FlexiO",
-            manufacturer=MANUFACTURER,
-            model=MODEL,
-            configuration_url=f"http://{self.coordinator.host}",
-        )
+        """Device information."""
+        return self.coordinator.get_device_info()
     @property
     def available(self) -> bool:
         """Entity availability."""

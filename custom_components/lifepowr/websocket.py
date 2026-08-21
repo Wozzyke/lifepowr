@@ -140,13 +140,6 @@ class LifepowrWebSocket:
             "topic"
         )
 
-        if topic:
-
-            _LOGGER.debug(
-                "Topic received: %s",
-                topic,
-            )
-
         try:
 
             await self._callback(
