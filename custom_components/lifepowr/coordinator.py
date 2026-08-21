@@ -28,20 +28,6 @@ from .websocket import LifepowrWebSocket
 
 _LOGGER = logging.getLogger(__name__)
 
-def get_device_info(self) -> DeviceInfo:
-    return DeviceInfo(
-        identifiers={
-            (
-                DOMAIN,
-                self.get_device_identifier(),
-            )
-        },
-        name=self.get_device_name(),
-        manufacturer=MANUFACTURER,
-        model=MODEL,
-        configuration_url=f"http://{self.host}",
-    )
-
 def parse_bool(
     value,
 ) -> bool:
@@ -1090,5 +1076,18 @@ class LifepowrCoordinator(DataUpdateCoordinator):
                 "fcr_tender",
                 {}
             )
+        )
+    def get_device_info(self) -> DeviceInfo:
+        return DeviceInfo(
+            identifiers={
+                (
+                    DOMAIN,
+                    self.get_device_identifier(),
+                )
+            },
+            name=self.get_device_name(),
+            manufacturer=MANUFACTURER,
+            model=MODEL,
+            configuration_url=f"http://{self.host}",
         )
 
